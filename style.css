@@ -1,0 +1,203 @@
+:root {
+  --bg-0: #0a0e1a;
+  --bg-1: #131829;
+  --fg-0: #f5f7fb;
+  --fg-1: #a8b0c4;
+  --accent: #ff7a3d;
+  --accent-glow: rgba(255, 122, 61, 0.4);
+  --radius: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  background: radial-gradient(ellipse at top, var(--bg-1) 0%, var(--bg-0) 70%);
+  color: var(--fg-0);
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255, 122, 61, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(61, 122, 255, 0.06) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.hero {
+  max-width: 560px;
+  width: 100%;
+  text-align: center;
+  animation: fadeUp 0.8s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.fox {
+  font-size: 2.5rem;
+  filter: drop-shadow(0 0 12px var(--accent-glow));
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.logo h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--fg-0) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.tagline {
+  font-size: clamp(1.75rem, 5vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.25rem;
+}
+
+.lede {
+  color: var(--fg-1);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+  max-width: 440px;
+  margin-inline: auto;
+}
+
+.waitlist {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 440px;
+  margin: 0 auto 1rem;
+  flex-wrap: wrap;
+}
+
+.waitlist input {
+  flex: 1;
+  min-width: 200px;
+  min-height: 48px;
+  padding: 0 1rem;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--fg-0);
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.waitlist input::placeholder { color: var(--fg-1); opacity: 0.6; }
+
+.waitlist input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.waitlist button {
+  min-height: 48px;
+  padding: 0 1.5rem;
+  border-radius: var(--radius);
+  border: none;
+  background: var(--accent);
+  color: var(--bg-0);
+  font-weight: 600;
+  font-size: 1rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+}
+
+.waitlist button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px var(--accent-glow);
+}
+
+.waitlist button:active:not(:disabled) { transform: translateY(0); }
+.waitlist button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.status {
+  min-height: 1.25rem;
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+}
+.status.success { color: #4ade80; }
+.status.error { color: #f87171; }
+
+.langs {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
+.langs button {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--fg-1);
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: inherit;
+  transition: all 0.2s;
+  min-height: 36px;
+}
+
+.langs button:hover { border-color: var(--accent); color: var(--fg-0); }
+.langs button.active {
+  background: var(--accent);
+  color: var(--bg-0);
+  border-color: var(--accent);
+}
+
+footer {
+  color: var(--fg-1);
+  font-size: 0.85rem;
+}
+
+footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+footer a:hover { text-decoration: underline; }
+
+@media (max-width: 480px) {
+  .waitlist { flex-direction: column; }
+  .waitlist button { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero, .fox { animation: none; }
+}

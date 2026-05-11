@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FixFox — Trusted home services in Georgia. Coming soon.</title>
+  <meta name="description" content="FixFox is the trust layer for home services in Georgia. Cleaning, handyman, and more — vetted partners, fair prices. Launching 2026." />
+  <meta property="og:title" content="FixFox — Trusted home services in Georgia" />
+  <meta property="og:description" content="Vetted partners, fair prices. Launching soon." />
+  <meta property="og:image" content="https://fixfox.ge/og-image.png" />
+  <meta property="og:url" content="https://fixfox.ge" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="hero">
+    <div class="logo">
+      <span class="fox" aria-hidden="true">🦊</span>
+      <h1>FixFox</h1>
+    </div>
+
+    <h2 class="tagline">Trusted home services. <br/>Coming to Georgia.</h2>
+
+    <p class="lede">
+      Cleaning, repairs, handyman — vetted partners, fair prices, no surprises.
+      Launching soon.
+    </p>
+
+    <form id="waitlist" class="waitlist" novalidate>
+      <input
+        type="email"
+        name="email"
+        placeholder="your@email.com"
+        required
+        autocomplete="email"
+        aria-label="Email address"
+      />
+      <button type="submit">Notify me</button>
+    </form>
+
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+
+    <div class="langs" role="group" aria-label="Language selector">
+      <button data-lang="en" class="active" type="button">EN</button>
+      <button data-lang="ka" type="button">ქართული</button>
+      <button data-lang="ru" type="button">RU</button>
+    </div>
+
+    <footer>
+      <p>© 2026 FixFox · Tbilisi, Georgia · <a href="mailto:hello@fixfox.ge">hello@fixfox.ge</a></p>
+    </footer>
+  </main>
+
+  <script>
+    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
+
+    const i18n = {
+      en: {
+        tagline: 'Trusted home services. <br/>Coming to Georgia.',
+        lede: 'Cleaning, repairs, handyman — vetted partners, fair prices, no surprises. Launching soon.',
+        placeholder: 'your@email.com',
+        button: 'Notify me',
+        success: 'Thanks! We will email you at launch.',
+        error: 'Something went wrong. Try again.',
+        invalid: 'Please enter a valid email.',
+      },
+      ka: {
+        tagline: 'სანდო საოჯახო სერვისები.<br/>მალე საქართველოში.',
+        lede: 'დასუფთავება, შეკეთება, ხელოსანი — შემოწმებული პარტნიორები, სამართლიანი ფასი.',
+        placeholder: 'თქვენი@email.com',
+        button: 'შემატყობინე',
+        success: 'მადლობა! გაშვებისთანავე მოგწერთ.',
+        error: 'შეცდომა. სცადეთ ხელახლა.',
+        invalid: 'შეიყვანეთ სწორი ელფოსტა.',
+      },
+      ru: {
+        tagline: 'Надёжные услуги для дома.<br/>Скоро в Грузии.',
+        lede: 'Уборка, ремонт, мастер на час — проверенные партнёры, честные цены.',
+        placeholder: 'ваш@email.com',
+        button: 'Сообщить',
+        success: 'Спасибо! Напишем при запуске.',
+        error: 'Ошибка. Попробуйте ещё.',
+        invalid: 'Введите корректный email.',
+      },
+    };
+
+    function setLang(lang) {
+      const t = i18n[lang];
+      document.querySelector('.tagline').innerHTML = t.tagline;
+      document.querySelector('.lede').textContent = t.lede;
+      document.querySelector('input[name=email]').placeholder = t.placeholder;
+      document.querySelector('button[type=submit]').textContent = t.button;
+      document.querySelectorAll('.langs button').forEach(b => {
+        b.classList.toggle('active', b.dataset.lang === lang);
+      });
+      document.documentElement.lang = lang;
+      localStorage.setItem('lang', lang);
+    }
+
+    document.querySelectorAll('.langs button').forEach(btn => {
+      btn.addEventListener('click', () => setLang(btn.dataset.lang));
+    });
+
+    const savedLang = localStorage.getItem('lang') || 'en';
+    setLang(savedLang);
+
+    document.getElementById('waitlist').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = e.target.email.value.trim();
+      const status = document.getElementById('status');
+      const lang = document.documentElement.lang;
+      const t = i18n[lang];
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        status.textContent = t.invalid;
+        status.className = 'status error';
+        return;
+      }
+
+      const button = e.target.querySelector('button[type=submit]');
+      button.disabled = true;
+
+      try {
+        const res = await fetch(FORMSPREE_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ email, lang, source: 'fixfox.ge' }),
+        });
+        if (!res.ok) throw new Error('failed');
+        status.textContent = t.success;
+        status.className = 'status success';
+        e.target.reset();
+      } catch {
+        status.textContent = t.error;
+        status.className = 'status error';
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
